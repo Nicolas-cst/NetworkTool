@@ -2,8 +2,8 @@ import { Component } from '@angular/core';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzLayoutModule } from 'ng-zorro-antd/layout';
 import { NzMenuModule } from 'ng-zorro-antd/menu';
-import { MenuComponent } from "./pages/menu/menu.component";
-import { NetworkComponent } from "./pages/network/network.component";
+import { MenuComponent } from "./menu/menu.component";
+import { NetworkComponent } from "./network/network.component";
 
 @Component({
   selector: 'app-root',

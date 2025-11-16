@@ -39,6 +39,8 @@
 
 - Sur la page principale :
   - Bandeau supérieur : 
+   - Lors du lancement de la récupération des paquets, proposer de lancer avec ou sans filtres. 
+      Si filtres, ouverture d'une modale permettant de les créer ou de les récupérer depuis 
    -  Possibilité de créer et ajouter des filtres personnalisés 
    -  Barre de recherche textuelle au sein des paquets
   - Page principale : 
@@ -51,7 +53,4 @@
   
 
 
-# TODO : Créer les premiers composants permettant l'affichage 
-   - Bandeau latéral gauche
-   - Page principale
-   - Bandeau latéral droite
+         

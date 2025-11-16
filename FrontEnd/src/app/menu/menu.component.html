@@ -1,0 +1,28 @@
+<div class="sidebar-menu-wrapper">
+  <!-- Logo -->
+  <div class="sidebar-logo-container" (click)="collapsedChange.emit()">
+    <i nz-icon nzType="play-circle" nzTheme="fill"></i>
+    @if(!isCollapsed){<span class="logo-text">Mon Logo</span>}
+  </div>
+
+  <ul nz-menu nzTheme="dark" nzMode="inline" [nzInlineCollapsed]="isCollapsed" class="sidebar-menu">
+
+    <li nz-submenu nzOpen nzTitle="Interfaces" nzIcon="wifi">
+      <ul>
+        @for (iface of disponibleIF; track iface) {
+          <li nz-menu-item (click)="selectIF(iface)">
+            <span>{{ iface }}</span>
+          </li>
+        }
+      </ul>
+    </li>
+
+    <div class="sidebar-spacer"></div>
+
+    <li nz-menu-item class="setting-item">
+      <i nz-icon nzType="setting"></i>
+      @if(!isCollapsed){<span>Paramètres</span>}
+    </li>
+
+  </ul>
+</div>

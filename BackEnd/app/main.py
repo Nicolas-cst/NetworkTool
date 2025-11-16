@@ -1,7 +1,15 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from routes.network_router import router
 
-app = FastAPI()
+app = FastAPI(title="Network Tool API")
 
-@app.get("/data")
-def read_data():
-    return {"message": "Backend Python fonctionne !"}
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:4200"],  # mon frontend
+    allow_credentials=True,
+    allow_methods=["*"],  # GET, POST, PUT, DELETE...
+    allow_headers=["*"],  # tous les headers
+)
+
+app.include_router(router)
