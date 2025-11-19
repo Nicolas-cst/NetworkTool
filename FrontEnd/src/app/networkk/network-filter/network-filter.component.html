@@ -1,0 +1,85 @@
+<nz-modal [nzVisible]="isVisible" [nzTitle]="'NETWORK.FILTER.TITLE' | translate" (nzOnCancel)="handleCloseModal()"
+  (nzOnOk)="handleSaveFilter()">
+  <div *nzModalContent>
+
+
+    <!-- Filter by ip -->
+    <span>{{'NETWORK.FILTER.IP' | translate}}</span>
+    <label nz-checkbox [(ngModel)]="showIpRange">{{'NETWORK.FILTER.ADD-IP-RANGE' | translate}}</label>
+    @if(showIpRange){
+    <!-- # TODO : Optimisation de l'ajout des range en proposant une concaténation si possible -->
+    <div>
+      <input nz-input placeholder="{{'NETWORK.FILTER.START-PLACEHOLDER' | translate}}" [(ngModel)]="startIp"
+        (ngModelChange)="onIpRangeChange()" />
+      <input nz-input placeholder="{{'NETWORK.FILTER.END-PLACEHOLDER' | translate}}" [(ngModel)]="endIp"
+        (ngModelChange)="onIpRangeChange()" />
+      <nz-space-compact>
+        <button nz-button nzType="primary" (click)="addIpFilter('source', true)"
+          [disabled]="ipRangeIsAlreadyInSource || !ipRangeFormatIsValid">{{'NETWORK.FILTER.ADD-TO-SOURCE' |
+          translate}}</button>
+        <button nz-button nzType="primary" (click)="addIpFilter('destination', true)"
+          [disabled]="ipRangeIsAlreadyInDestination || !ipRangeFormatIsValid">{{'NETWORK.FILTER.ADD-TO-DESTINATION' |
+          translate}}</button>
+        <button nz-button nzType="primary" (click)="addIpFilter('both', true)"
+          [disabled]="ipRangeIsAlreadyInSource || ipRangeIsAlreadyInDestination || !ipRangeFormatIsValid">{{'NETWORK.FILTER.ADD-TO-BOTH'
+          | translate}}</button>
+      </nz-space-compact>
+    </div>
+    }@else{
+    <div>
+      <input nz-input placeholder="{{'NETWORK.FILTER.IP-PLACEHOLDER' | translate}}" [(ngModel)]="ip"
+        (ngModelChange)="onIpChange()" />
+      <nz-space-compact>
+        <button nz-button nzType="primary" (click)="addIpFilter('source', false)"
+          [disabled]="ipAlreadyInSource || !ipFormatIsValid">{{'NETWORK.FILTER.ADD-TO-SOURCE' | translate}}</button>
+        <button nz-button nzType="primary" (click)="addIpFilter('destination', false)"
+          [disabled]="ipAlreadyInDestination || !ipFormatIsValid">{{'NETWORK.FILTER.ADD-TO-DESTINATION' |
+          translate}}</button>
+        <button nz-button nzType="primary" (click)="addIpFilter('both', false)"
+          [disabled]="ipAlreadyInSource || ipAlreadyInDestination || !ipFormatIsValid">{{'NETWORK.FILTER.ADD-TO-BOTH' |
+          translate}}</button>
+      </nz-space-compact>
+    </div>
+    }
+
+
+
+
+
+    <!-- Filter by protocol-->
+    <div>
+      <span>{{'NETWORK.FILTER.PROTOCOL' | translate}}</span>
+    </div>
+
+    <!-- Filter by length -->
+    <div>
+      <!-- On fait deux input, un pour le min l'autre pour le max-->
+      <!-- Aussi, mettre à jour les boutons d'ajout pour qu'ils se bisable au bon moment  -->
+      <span>{{'NETWORK.FILTER.LENGTH' | translate}}</span>
+
+      <!-- <nz-space-compact>
+        <input nz-input placeholder="{{'NETWORK.FILTER.DESTINATION' | translate}}" [(ngModel)]="minLength"
+          (ngModelChange)="checkLength($event, 'min')" />
+        <button nz-button (click)="addLength('min')" [disabled]="!isMinLengthValid">
+          <i nz-icon nzType="plus" nzTheme="outline"></i>
+        </button>
+      </nz-space-compact>
+
+      <nz-space-compact>
+        <input nz-input placeholder="{{'NETWORK.FILTER.DESTINATION' | translate}}" [(ngModel)]="maxLength"
+          (ngModelChange)="checkLength($event, 'max')" />
+        <button nz-button (click)="addLength('max')" [disabled]="!isMaxLengthValid">
+          <i nz-icon nzType="plus" nzTheme="outline"></i>
+        </button>
+      </nz-space-compact> -->
+
+
+
+
+    </div>
+
+
+  </div>
+
+
+</nz-modal>

@@ -1,6 +1,8 @@
-from fastapi import APIRouter, WebSocket, WebSocketDisconnect
+from fastapi import APIRouter, WebSocket
 from services import network_service  
 import asyncio
+from scapy.all import sniff
+import websockets
 router = APIRouter()
 ns = network_service.NetworkService()
 
@@ -9,32 +11,28 @@ ns = network_service.NetworkService()
 #     return network_service.get_network_packets()
 
 
-## Launch capture
 @router.websocket("/network/start")
-async def websocket_endpoint(websocket: WebSocket):
-    await websocket.accept()  # Accepte la connexion
+async def network_retrieval(websocket: WebSocket):
+    await websocket.accept()
 
-    loop = asyncio.get_running_loop()  # récupère le loop principal
+    loop = asyncio.get_running_loop()   # <-- correct
 
-    async def send_packet(packet_dict):
-        await websocket.send_json(packet_dict)
+    def send_packet(pkt):
+        summary = pkt.summary()
+        print(f"Packet captured: {summary}")
+        asyncio.run_coroutine_threadsafe(
+            websocket.send_text(summary),
+            loop
+        )
 
-    ns.start_sniffing(send_callback=send_packet, loop=loop)
-
-    try:
-        while True:
-            await websocket.receive_text()  # Maintient la connexion ouverte
-    except WebSocketDisconnect:
-        ns.stop_sniffing = True
-
-
-
-
-# ## Stop capture
-# @router.websocket("/network/stop")
-# async def websocket_endpoint(websocket: WebSocket):
-#     await websocket.accept()
-    
+    await asyncio.get_running_loop().run_in_executor(
+        None,
+        sniff,
+        {
+            "prn": send_packet,
+            "store": 0
+        }
+    )
 
 @router.get("/network/interfaces")
 def get_network_interfaces():

@@ -3,7 +3,7 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzLayoutModule } from 'ng-zorro-antd/layout';
 import { NzMenuModule } from 'ng-zorro-antd/menu';
 import { MenuComponent } from "./menu/menu.component";
-import { NetworkComponent } from "./network/network.component";
+import { NetworkComponent } from "./networkk/network/network.component";
 
 @Component({
   selector: 'app-root',

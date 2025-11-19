@@ -2,7 +2,7 @@
   <!-- Logo -->
   <div class="sidebar-logo-container" (click)="collapsedChange.emit()">
     <i nz-icon nzType="play-circle" nzTheme="fill"></i>
-    @if(!isCollapsed){<span class="logo-text">Mon Logo</span>}
+    @if(!isCollapsed){<span class="logo-text">{{'MENU.LOGO' | translate}}</span>}
   </div>
 
   <ul nz-menu nzTheme="dark" nzMode="inline" [nzInlineCollapsed]="isCollapsed" class="sidebar-menu">
@@ -21,7 +21,7 @@
 
     <li nz-menu-item class="setting-item">
       <i nz-icon nzType="setting"></i>
-      @if(!isCollapsed){<span>Paramètres</span>}
+      @if(!isCollapsed){<span>{{'MENU.SETTINGS' | translate}}</span>}
     </li>
 
   </ul>

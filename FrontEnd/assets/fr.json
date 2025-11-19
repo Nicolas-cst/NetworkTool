@@ -1,0 +1,33 @@
+{
+  "MENU": {
+    "INTERFACES": "Interfaces",
+    "SETTINGS": "Settings"
+  },
+  "NETWORK": {
+    "TABLE": {
+      "ID": "Id",
+      "TIMESTAMP": "Timestamp",
+      "SOURCE": "IP Source",
+      "DESTINATION": "IP Destination",
+      "PROTOCOL": "Protocol",
+      "LENGTH": "Length"
+    },
+    "FILTER": {
+      "TITLE": "Filter",
+      "IP": "Filter by ip adresses",
+      "PROTOCOL": "Filter by protocols",
+      "LENGTH": "Filter by length",
+      "ADD-IP-RANGE": "Add ip range",
+      "SOURCE" : "Ip source",
+      "DESTINATION" : "Ip destination",
+      "IP-PLACEHOLDER": "192.200.0.x",
+      "START-PLACEHOLDER": "Start IP",
+      "END-PLACEHOLDER": "End IP",
+      "ADD-TO-SOURCE": "Add to source",
+      "ADD-TO-DESTINATION": "Add to destination",
+      "ADD-TO-BOTH": "Add to both"
+    },
+    "START": "Start capture",
+    "STOP": "Stop capture"
+  }
+}

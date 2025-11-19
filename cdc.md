@@ -51,6 +51,39 @@
   - contient le détail héxa du paquet selectionné
   - contient une explication claire comme dans wireshark
   
+   On peut créer ses propres filtres, les utiliser et les sauvegarder dans sa session.
+   On peut appliquer des filtres tout fait.
+
+   1 filtre unique modifiable en temps réel en ajoutant des sous filtres à chaque option : 
+      Options filtrables :    
+         Proto : Liste des proto
+         Source ip : à ajouter / remplir (prévoir une vérification de l'ip)
+         Desitnaiton ip : pareil
+         Length : Bytes
+
+   Passer la loupe en vert si un style est appliqué, default sinon. Faire apparaitre une modal pour la création de filtre :
+      Source et Dest proposer des plages début fin avec une case à cocher pour faire apparaitre la plage ou juste l'unité
+      Proto : fournir une liste de tous les protos avec un select
+      Length : input < PAQUET < input valider. Pouvoir en mettre plusieurs pour les stack. 
+
+   <!-- Réflexion pour la vérification des ip dans les filtres : 
+      IP clasique : 
+         On met 1 input et 3 boutons. Source only  Destination Only  Both
+         B1 : grisé si l'ip est déjà filtrée dans la source
+         B2 : même idée
+         B3 : même idée  
+
+      IP range : 
+         On veut un début et une fin de plage donc au min 2 inputs. 
+         On veut aussi savoir où attribuer ce filtre donc 3 boutons. 
+         Comment formater les débuts et fin, car ça peut être : 200.x.x.x à 201.x.x.x
+         Valide si en parcourant chaque chiffre, celui du début est plus bas que celui de la fin. 
+         On ajoute les 0 où ils manquent. on del les x et les points et on compare les chiffres. 
+         Il faut absolument que la fin soit plus grande que le début. -->
 
 
-         
+
+
+
+
+

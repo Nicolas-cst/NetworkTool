@@ -1,0 +1,39 @@
+<!-- Menu -->
+<nz-space-compact>
+  <!-- <button nz-button nzType="primary" (click)="startCapture()" [disabled]="ws">{{'NETWORK.START'| translate}}</button>
+  <button nz-button nzType="primary" (click)="stopCapture()" [disabled]="!ws">{{'NETWORK.STOP' | translate}}</button> -->
+  <button nz-button nzType="primary" (click)="showFilter()" [disabled]="ws">
+    <nz-icon nzType="search" nzTheme="outline"  /> 
+  </button>
+</nz-space-compact>
+
+<!-- Filter -->
+ @if(setFilter){
+  <app-network-filter ></app-network-filter>
+ }
+
+<!-- Network  -->
+<nz-table [nzData]="packets">
+  <thead>
+    <tr>
+      <th>{{'NETWORK.TABLE.ID' | translate}}</th>
+      <th>{{'NETWORK.TABLE.TIMESTAMP' | translate}}</th>
+      <th>{{'NETWORK.TABLE.SOURCE' | translate}}</th>
+      <th>{{'NETWORK.TABLE.DESTINATION' | translate}}</th>
+      <th>{{'NETWORK.TABLE.PROTOCOL' | translate}}</th>
+      <th>{{'NETWORK.TABLE.LENGTH' | translate}}</th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (packet of packets; track packet.id) {
+    <tr>
+      <td>{{ packet.id }}</td>
+      <td>{{ packet.timestamp }}</td>
+      <td>{{ packet.src_ip }}</td>
+      <td>{{ packet.dest_ip }}</td>
+      <td>{{ packet.protocol }}</td>
+      <td>{{ packet.length }}</td>
+    </tr>
+    }
+  </tbody>
+</nz-table>
