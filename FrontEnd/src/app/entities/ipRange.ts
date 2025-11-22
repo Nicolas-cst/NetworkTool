@@ -6,4 +6,8 @@ export class IpRange {
     this.start = start;
     this.end = end;
   }
+
+  display(): string {
+    return `[${this.start} - ${this.end}]`;
+  }
 }

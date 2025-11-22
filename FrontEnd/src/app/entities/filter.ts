@@ -1,13 +1,14 @@
-import { IpRange } from "./ipRange.model";
-import { LengthRange } from "./lengthRange.model";
+import { IpRange } from "./ipRange";
+import { LengthRange } from "./lengthRange";
+import { Protocol } from "./protocol";
 
 export class Filter {
   destinationIpRanges: IpRange[];
   sourceIpRanges: IpRange[];
   destinationIps: string[];
   sourceIps: string[];
-  protocols: string[];
-  lengthRange: LengthRange[];
+  protocols: Protocol[];
+  lengthRanges: LengthRange[];
 
   constructor() {
     this.destinationIpRanges = [];
@@ -15,7 +16,7 @@ export class Filter {
     this.destinationIps = [];
     this.sourceIps = [];
     this.protocols = [];
-    this.lengthRange = [];
+    this.lengthRanges = [];
   }
   
 }

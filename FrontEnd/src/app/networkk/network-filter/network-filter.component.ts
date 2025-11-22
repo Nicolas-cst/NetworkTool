@@ -1,5 +1,5 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { Filter } from '../../models/filter.model';
+import { ChangeDetectorRef, Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Filter } from '../../entities/filter';
 import { NetworkService } from '../../Services/network.service';
 import { NzModalModule } from 'ng-zorro-antd/modal';
 import { TranslatePipe } from '../../shared/pipes/translate.pipe';
@@ -9,31 +9,28 @@ import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzSpaceModule } from 'ng-zorro-antd/space';
 import { NzButtonModule } from "ng-zorro-antd/button";
 import { NzIconModule } from 'ng-zorro-antd/icon';
-import { IpRange } from '../../models/ipRange.model';
+import { IpRange } from '../../entities/ipRange';
+import { Protocol } from '../../entities/protocol';
+import { NzSelectModule } from 'ng-zorro-antd/select';
+import { NzTagModule } from 'ng-zorro-antd/tag';
+import { LengthRange } from '../../entities/lengthRange';
 
 @Component({
   selector: 'app-network-filter',
-  imports: [NzModalModule, TranslatePipe, NzCheckboxModule, FormsModule, NzFormModule, NzSpaceModule, NzButtonModule, NzIconModule],
+  imports: [NzModalModule, TranslatePipe, NzCheckboxModule, FormsModule, NzFormModule, NzSpaceModule, NzButtonModule, NzIconModule, NzSelectModule, NzTagModule],
   templateUrl: './network-filter.component.html',
   styleUrl: './network-filter.component.scss',
 })
 export class NetworkFilterComponent implements OnInit {
 
   constructor(
-    public ns: NetworkService
+    public ns: NetworkService,
+    public cdr: ChangeDetectorRef
   ) { }
 
   showIpRange: boolean = false;
   isVisible: boolean = false;
   newFilter: Filter = new Filter();
-  // @Output() Pour informer le compsoant parent qu'un filtre a été sauvegardé
-
-
-  // Paramètres du filtre avant sauvegarde
-
-
-
-
 
   // IP RANGE
   ipRangeIsAlreadyInSource: boolean = false;
@@ -49,10 +46,12 @@ export class NetworkFilterComponent implements OnInit {
   ipFormatIsValid: boolean = false;
 
   // PROTOCOLS
-
+  protocolsInFilter: Protocol[] = [];
+  
   // LENGTH RANGE
   minLength: number = 0;
   maxLength: number = 100000;
+  isLengthRangeValid: boolean = false;
 
   ngOnInit() {
     this.newFilter = this.ns.filter; // On ajoute l'ancien filtre au filtre courant et on fera les modifs dessus.
@@ -94,10 +93,6 @@ export class NetworkFilterComponent implements OnInit {
       if (type == 'both' || type == "destination") {
         this.newFilter.destinationIpRanges.push(ipRange);
       }
-      this.onIpRangeChange();
-      this.startIp = "";
-      this.endIp = "";
-      this.isIpRangeValid(new IpRange(this.startIp, this.endIp));
     } else {
       if (type == 'both' || type == "source") {
         this.newFilter.sourceIps.push(this.ip)
@@ -105,10 +100,29 @@ export class NetworkFilterComponent implements OnInit {
       if (type == 'both' || type == "destination") {
         this.newFilter.destinationIps.push(this.ip)
       }
-      this.onIpChange();
-      this.ip = "";
-      this.isValidIp(this.ip);
     }
+
+    this.ip = "";
+    this.startIp = "";
+    this.endIp = "";
+    this.onIpRangeChange();
+    this.onIpChange();
+  }
+
+  removeIpFilter(type: string, ip: string) {
+    if (type == 'both' || type == "source") {
+      const index = this.newFilter.sourceIps.indexOf(ip);
+      if (index > -1) {
+        this.newFilter.sourceIps.splice(index, 1);
+      }
+    }
+    if (type == 'both' || type == "destination") {
+      const index = this.newFilter.destinationIps.indexOf(ip);
+      if (index > -1) {
+        this.newFilter.destinationIps.splice(index, 1);
+      }
+    }
+    this.cdr.markForCheck();
   }
 
   isValidIp(ip: string): boolean {
@@ -129,12 +143,28 @@ export class NetworkFilterComponent implements OnInit {
   onIpRangeChange() {
     // Vérifier à chaque nouvelle entrée si : le format est valide, et si l'ip est déjà dans les filtres
     if (this.isIpRangeValid(new IpRange(this.startIp, this.endIp))) {
-      this.ipRangeIsAlreadyInSource = this.newFilter.sourceIpRanges.findIndex(range => range.start === this.startIp && range.end === this.endIp) != -1;
-      this.ipRangeIsAlreadyInDestination = this.newFilter.destinationIpRanges.findIndex(range => range.start === this.startIp && range.end === this.endIp) != -1 ;
+      this.ipRangeIsAlreadyInSource = this.newFilter.sourceIpRanges.findIndex((range: IpRange) => range.start === this.startIp && range.end === this.endIp) != -1;
+      this.ipRangeIsAlreadyInDestination = this.newFilter.destinationIpRanges.findIndex((range: IpRange) => range.start === this.startIp && range.end === this.endIp) != -1;
       this.ipRangeFormatIsValid = true;
     } else {
       this.ipRangeFormatIsValid = false;
     }
+  }
+
+  removeIpRangeFilter(type: string, ipRange: IpRange) {
+    if (type == 'both' || type == "source") {
+      const index = this.newFilter.sourceIpRanges.indexOf(ipRange);
+      if (index > -1) {
+        this.newFilter.sourceIpRanges.splice(index, 1);
+      }
+    }
+    if (type == 'both' || type == "destination") {
+      const index = this.newFilter.destinationIpRanges.indexOf(ipRange);
+      if (index > -1) {
+        this.newFilter.destinationIpRanges.splice(index, 1);
+      }
+    }
+    this.cdr.markForCheck();
   }
 
   isIpRangeValid(ipRange: IpRange) {
@@ -153,4 +183,40 @@ export class NetworkFilterComponent implements OnInit {
     return result;
   }
 
+  // Length RANGE
+
+  addLengthRange() {
+    let newRange = new LengthRange(this.cleanLength(this.minLength), this.cleanLength(this.maxLength));
+    this.newFilter.lengthRanges.push(newRange);
+    this.minLength = 0;
+    this.maxLength = 100000;
+    this.onLengthChange();
+  }
+
+  onLengthChange() {
+    if (this.newFilter.lengthRanges.findIndex(range => range.min === this.minLength && range.max === this.maxLength) != -1) {
+      this.isLengthRangeValid = false;
+    } else {
+      this.isLengthRangeValid = this.minLength >= 0 && this.maxLength >= 0 && this.maxLength <= 100000 && this.minLength < this.maxLength;
+    }
+  }
+
+  removeLengthRange(lengthRange: LengthRange) {
+    const index = this.newFilter.lengthRanges.indexOf(lengthRange);
+    if (index >= 0) {
+      this.newFilter.lengthRanges.splice(index, 1);
+    }
+    this.cdr.markForCheck();
+  }
+
+  cleanLength(n: number): number{
+    let s = String(n);
+    s = s.replace(/^0+/, "");
+    if (s === "" || s === ".") return 0;
+    if (s.includes(".")) {
+        s = s.replace(/0+$/, "");
+        s = s.replace(/\.$/, "");
+    }
+    return Number(s);
+  }
 }

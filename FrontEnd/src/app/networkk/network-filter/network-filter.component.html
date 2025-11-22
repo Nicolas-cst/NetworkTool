@@ -1,19 +1,23 @@
-<nz-modal [nzVisible]="isVisible" [nzTitle]="'NETWORK.FILTER.TITLE' | translate" (nzOnCancel)="handleCloseModal()"
-  (nzOnOk)="handleSaveFilter()">
+<nz-modal class="modal" [nzWidth]="800" [nzCentered]="true" [nzVisible]="isVisible"
+  [nzTitle]="'NETWORK.FILTER.TITLE' | translate" (nzOnCancel)="handleCloseModal()" (nzOnOk)="handleSaveFilter()">
   <div *nzModalContent>
 
-
     <!-- Filter by ip -->
-    <span>{{'NETWORK.FILTER.IP' | translate}}</span>
-    <label nz-checkbox [(ngModel)]="showIpRange">{{'NETWORK.FILTER.ADD-IP-RANGE' | translate}}</label>
+    <div class="title">
+      <span class="filter-title">{{'NETWORK.FILTER.IP' | translate}}</span>
+      <label style="margin-left: 237px;" nz-checkbox [(ngModel)]="showIpRange">{{'NETWORK.FILTER.ADD-IP-RANGE' |
+        translate}}</label>
+    </div>
+
     @if(showIpRange){
     <!-- # TODO : Optimisation de l'ajout des range en proposant une concaténation si possible -->
-    <div>
+    <div class="action-container">
       <input nz-input placeholder="{{'NETWORK.FILTER.START-PLACEHOLDER' | translate}}" [(ngModel)]="startIp"
         (ngModelChange)="onIpRangeChange()" />
       <input nz-input placeholder="{{'NETWORK.FILTER.END-PLACEHOLDER' | translate}}" [(ngModel)]="endIp"
         (ngModelChange)="onIpRangeChange()" />
-      <nz-space-compact>
+      <span style="width: 32px;"></span>
+      <nz-space-compact class="button">
         <button nz-button nzType="primary" (click)="addIpFilter('source', true)"
           [disabled]="ipRangeIsAlreadyInSource || !ipRangeFormatIsValid">{{'NETWORK.FILTER.ADD-TO-SOURCE' |
           translate}}</button>
@@ -26,10 +30,11 @@
       </nz-space-compact>
     </div>
     }@else{
-    <div>
+    <div class="action-container">
       <input nz-input placeholder="{{'NETWORK.FILTER.IP-PLACEHOLDER' | translate}}" [(ngModel)]="ip"
         (ngModelChange)="onIpChange()" />
-      <nz-space-compact>
+      <span style="width: 199px;"></span>
+      <nz-space-compact class="button">
         <button nz-button nzType="primary" (click)="addIpFilter('source', false)"
           [disabled]="ipAlreadyInSource || !ipFormatIsValid">{{'NETWORK.FILTER.ADD-TO-SOURCE' | translate}}</button>
         <button nz-button nzType="primary" (click)="addIpFilter('destination', false)"
@@ -42,44 +47,70 @@
     </div>
     }
 
+    <div class="label-container">
+      @for(ipSource of this.newFilter.sourceIps; track ipSource){
+      <nz-tag class="ip-tag">
+        {{"Source : " + ipSource}}
+        <nz-icon style="padding-left: 10px; cursor: pointer;"nzType="close" (click)="removeIpFilter('source', ipSource)"></nz-icon></nz-tag>
+      }
+      @for(ipDestination of this.newFilter.destinationIps; track ipDestination){
+      <nz-tag class="ip-tag">
+        {{"Destination : " + ipDestination}}
+        <nz-icon style="padding-left: 10px; cursor: pointer;"nzType="close" (click)="removeIpFilter('destination', ipDestination)"></nz-icon></nz-tag>
+      }
 
+      @for(sourceIpRange of this.newFilter.sourceIpRanges; track sourceIpRange){
+      <nz-tag class="ip-tag">
+        {{"Source Range : " + sourceIpRange.display()}}
+        <nz-icon style="padding-left: 10px; cursor: pointer;"nzType="close" (click)="removeIpRangeFilter('source', sourceIpRange)"></nz-icon></nz-tag>
+      }
 
-
+      @for(destinationIpRange of this.newFilter.destinationIpRanges; track destinationIpRange){
+      <nz-tag class="ip-tag">
+        {{"Destiantion Range : " + destinationIpRange.display()}}
+        <nz-icon style="padding-left: 10px; cursor: pointer;"nzType="close" (click)="removeIpRangeFilter('destination', destinationIpRange)"></nz-icon></nz-tag>
+      }
+    </div>
 
     <!-- Filter by protocol-->
     <div>
-      <span>{{'NETWORK.FILTER.PROTOCOL' | translate}}</span>
+      <div class="title">
+        <span class="filter-title">{{'NETWORK.FILTER.PROTOCOL' | translate}}</span>
+      </div>
+      <nz-select class="select" nzShowSearch nzMode="tags"
+        nzPlaceHolder="{{'NETWORK.FILTER.SELECT-PROTOCOL' | translate}}" [(ngModel)]="this.newFilter.protocols">
+        @for(protocol of ns.allProtocols; track protocol.id){
+        <nz-option ngFor [nzLabel]="protocol.name" [nzValue]="protocol.id"></nz-option>
+        }
+      </nz-select>
     </div>
 
     <!-- Filter by length -->
+    <!-- # TODO : Optimisation des ranges entrées en mémoire automatiser leur concaténation -->
+    <!-- # TODO : Faire en sorte que l'on voit le placehold à l'ouverture de la modal -->
     <div>
-      <!-- On fait deux input, un pour le min l'autre pour le max-->
-      <!-- Aussi, mettre à jour les boutons d'ajout pour qu'ils se bisable au bon moment  -->
-      <span>{{'NETWORK.FILTER.LENGTH' | translate}}</span>
+      <div class="title">
+        <span class="filter-title">{{'NETWORK.FILTER.LENGTH' | translate}}</span>
+      </div>
+      <nz-space-compact class="action-container">
+        <input nz-input placeholder="{{'NETWORK.FILTER.MIN-PLACEHOLDER' | translate}}" [(ngModel)]="minLength"
+          (ngModelChange)="onLengthChange()" />
+        <input nz-input placeholder="{{'NETWORK.FILTER.MAX-PLACEHOLDER' | translate}}" [(ngModel)]="maxLength"
+          (ngModelChange)="onLengthChange()" />
+        <span style="width: 32px;"></span>
 
-      <!-- <nz-space-compact>
-        <input nz-input placeholder="{{'NETWORK.FILTER.DESTINATION' | translate}}" [(ngModel)]="minLength"
-          (ngModelChange)="checkLength($event, 'min')" />
-        <button nz-button (click)="addLength('min')" [disabled]="!isMinLengthValid">
-          <i nz-icon nzType="plus" nzTheme="outline"></i>
+        <button nz-button nzType="primary" (click)="addLengthRange()" [disabled]="!isLengthRangeValid">
+          <nz-icon nzType="plus" nzTheme="outline"></nz-icon>
         </button>
       </nz-space-compact>
 
-      <nz-space-compact>
-        <input nz-input placeholder="{{'NETWORK.FILTER.DESTINATION' | translate}}" [(ngModel)]="maxLength"
-          (ngModelChange)="checkLength($event, 'max')" />
-        <button nz-button (click)="addLength('max')" [disabled]="!isMaxLengthValid">
-          <i nz-icon nzType="plus" nzTheme="outline"></i>
-        </button>
-      </nz-space-compact> -->
-
-
-
-
+      <div class="label-container">
+        @for(lengthRange of this.newFilter.lengthRanges; track lengthRange){
+        <nz-tag class="length-tag">
+          {{lengthRange.display()}}
+          <nz-icon style="padding-left: 10px; cursor: pointer;"nzType="close" (click)="removeLengthRange(lengthRange)"></nz-icon></nz-tag>
+        }  
+      </div>
     </div>
-
-
   </div>
-
-
 </nz-modal>

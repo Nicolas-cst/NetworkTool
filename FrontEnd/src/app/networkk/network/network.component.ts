@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { NzSpaceModule } from 'ng-zorro-antd/space';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NetworkService } from '../../Services/network.service';
-import { Packet } from '../../models/packet.model';
+import { Packet } from '../../entities/packet';
 import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { TranslatePipe } from '../../shared/pipes/translate.pipe';

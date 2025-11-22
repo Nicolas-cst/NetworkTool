@@ -1,0 +1,33 @@
+.title {
+  display: flex;
+  align-items: center;
+  padding: 5px 0px 10px 0px;
+}
+
+.filter-title{
+  font-weight: bold;
+}
+
+.action-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.select{
+  width:332px;
+  padding-bottom : 20px;
+}
+
+.button {
+  align-items: right;
+}
+
+.label-container {
+  display: flex;
+  align-items: center;
+  width: 752px;
+  flex-wrap: wrap;
+  gap : 8px;
+  margin-bottom: 10px;
+}

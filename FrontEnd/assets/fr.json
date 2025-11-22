@@ -1,7 +1,8 @@
 {
   "MENU": {
     "INTERFACES": "Interfaces",
-    "SETTINGS": "Settings"
+    "SETTINGS": "Settings",
+    "LOGO" : "Network Tool"
   },
   "NETWORK": {
     "TABLE": {
@@ -18,11 +19,16 @@
       "PROTOCOL": "Filter by protocols",
       "LENGTH": "Filter by length",
       "ADD-IP-RANGE": "Add ip range",
+      "ADD-LENGTH-RANGE": "Add length range",
       "SOURCE" : "Ip source",
       "DESTINATION" : "Ip destination",
       "IP-PLACEHOLDER": "192.200.0.x",
       "START-PLACEHOLDER": "Start IP",
       "END-PLACEHOLDER": "End IP",
+      "MIN-PLACEHOLDER": "Min length ( 0 )",
+      "MAX-PLACEHOLDER": "Max length ( 100 000 )",
+      "LENGTH-PLACEHOLDER": "Length in bytes",
+      "SELECT-PROTOCOL": "Select protocols",
       "ADD-TO-SOURCE": "Add to source",
       "ADD-TO-DESTINATION": "Add to destination",
       "ADD-TO-BOTH": "Add to both"
