@@ -22,15 +22,16 @@ export class MenuComponent implements OnInit {
   disponibleIF : string[] = [];
 
   ngOnInit(){
-  //   this.ns.getAvailableInterfaces().subscribe((interfaces : string[]) => {
-  //     this.disponibleIF = interfaces;
-  //   })
-  // }
+    this.ns.getAvailableInterfaces().subscribe((interfaces : string[]) => {
+      this.disponibleIF = interfaces;
+    })
   }
-
+  
   selectIF(iface: string){
     let index = this.disponibleIF.indexOf(iface);
-    this.ns.selectedInterface.next(index);
+    if(index >= 0 ){
+      this.ns.selectedInterface.next(index);
+    }
   }
 
 

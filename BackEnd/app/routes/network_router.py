@@ -1,39 +1,30 @@
-from fastapi import APIRouter, WebSocket
-from services import network_service  
-import asyncio
+from fastapi import APIRouter
+from services import network_service
 from scapy.all import sniff
-import websockets
+import logging
+
+logger = logging.getLogger("uvicorn")
 router = APIRouter()
 ns = network_service.NetworkService()
 
-# @router.get("/network/packets")
-# def get_network_packets():
-#     return network_service.get_network_packets()
 
+# Lancement de la capture
+@router.get("/network/start/{interface}")
+def start_capture(interface: int):
+    logger.info(f"📡 Route /network/start/{interface} called")
+    return ns.start_capture(interface)
 
-@router.websocket("/network/start")
-async def network_retrieval(websocket: WebSocket):
-    await websocket.accept()
+# Arrêt de la capture
+@router.get("/network/stop")
+def stop_capture():
+    return ns.stop_capture()
 
-    loop = asyncio.get_running_loop()   # <-- correct
+# Récupération des paquets capturés
+@router.get("/network/packets")
+def getPackets():
+    return ns.getPackets()
 
-    def send_packet(pkt):
-        summary = pkt.summary()
-        print(f"Packet captured: {summary}")
-        asyncio.run_coroutine_threadsafe(
-            websocket.send_text(summary),
-            loop
-        )
-
-    await asyncio.get_running_loop().run_in_executor(
-        None,
-        sniff,
-        {
-            "prn": send_packet,
-            "store": 0
-        }
-    )
-
+# Récupération des interfaces réseau
 @router.get("/network/interfaces")
 def get_network_interfaces():
     return ns.all_network_interfaces()

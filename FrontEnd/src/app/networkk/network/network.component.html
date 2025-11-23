@@ -1,9 +1,14 @@
 <!-- Menu -->
 <nz-space-compact>
-  <!-- <button nz-button nzType="primary" (click)="startCapture()" [disabled]="ws">{{'NETWORK.START'| translate}}</button>
-  <button nz-button nzType="primary" (click)="stopCapture()" [disabled]="!ws">{{'NETWORK.STOP' | translate}}</button> -->
-  <button nz-button nzType="primary" (click)="showFilter()" [disabled]="ws">
-    <nz-icon nzType="search" nzTheme="outline"  /> 
+  <button nz-button nzType="primary" (click)="startCapture()" [disabled]="ns.selectedInterface.getValue() === -1 || isCapturing">{{'NETWORK.START'| translate}}</button>
+  <button nz-button nzType="primary" (click)="stopCapture()" [disabled]="!isCapturing">{{'NETWORK.STOP' | translate}}</button>
+  <button nz-button nzType="primary" (click)="showFilter()" [disabled]="false">
+    <nz-icon nzType="search" nzTheme="outline"/> 
+  </button>
+  <button nz-button nzType="primary" [disabled]="filteredData.length === 0 || isCapturing"
+      nz-popconfirm nzPopconfirmTitle="{{'GENERAL.CONFIRM-DELETE' | translate }}" (nzOnConfirm)="resetData()" 
+      nzOkText="{{'GENERAL.CONFIRM' | translate}}" nzCancelText="{{'GENERAL.CANCEL' | translate}}">
+    <nz-icon nzType="delete" nzTheme="outline"/>
   </button>
 </nz-space-compact>
 
@@ -13,19 +18,19 @@
  }
 
 <!-- Network  -->
-<nz-table [nzData]="packets">
+<nz-table [nzData]="filteredData" nzSize="small">
   <thead>
     <tr>
-      <th>{{'NETWORK.TABLE.ID' | translate}}</th>
-      <th>{{'NETWORK.TABLE.TIMESTAMP' | translate}}</th>
-      <th>{{'NETWORK.TABLE.SOURCE' | translate}}</th>
-      <th>{{'NETWORK.TABLE.DESTINATION' | translate}}</th>
-      <th>{{'NETWORK.TABLE.PROTOCOL' | translate}}</th>
-      <th>{{'NETWORK.TABLE.LENGTH' | translate}}</th>
+      <th nzWidth="50px">{{'NETWORK.TABLE.ID' | translate}}</th>
+      <th nzWidth="130px">{{'NETWORK.TABLE.TIMESTAMP' | translate}}</th>
+      <th nzWidth="130px">{{'NETWORK.TABLE.SOURCE' | translate}}</th>
+      <th nzWidth="130px">{{'NETWORK.TABLE.DESTINATION' | translate}}</th>
+      <th nzWidth="130px">{{'NETWORK.TABLE.PROTOCOL' | translate}}</th>
+      <th >{{'NETWORK.TABLE.LENGTH' | translate}}</th>
     </tr>
   </thead>
   <tbody>
-    @for (packet of packets; track packet.id) {
+    @for (packet of filteredData; track packet.id) {
     <tr>
       <td>{{ packet.id }}</td>
       <td>{{ packet.timestamp }}</td>

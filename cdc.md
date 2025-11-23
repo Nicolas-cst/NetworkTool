@@ -66,24 +66,15 @@
       Proto : fournir une liste de tous les protos avec un select
       Length : input < PAQUET < input valider. Pouvoir en mettre plusieurs pour les stack. 
 
-   <!-- Réflexion pour la vérification des ip dans les filtres : 
-      IP clasique : 
-         On met 1 input et 3 boutons. Source only  Destination Only  Both
-         B1 : grisé si l'ip est déjà filtrée dans la source
-         B2 : même idée
-         B3 : même idée  
-
-      IP range : 
-         On veut un début et une fin de plage donc au min 2 inputs. 
-         On veut aussi savoir où attribuer ce filtre donc 3 boutons. 
-         Comment formater les débuts et fin, car ça peut être : 200.x.x.x à 201.x.x.x
-         Valide si en parcourant chaque chiffre, celui du début est plus bas que celui de la fin. 
-         On ajoute les 0 où ils manquent. on del les x et les points et on compare les chiffres. 
-         Il faut absolument que la fin soit plus grande que le début. -->
 
 
 
+// A faire : 
+   Modifier le style du tableau et méliorer le style du contenu des lignes  OK
+   Disbale les boutons au bon moments  OKK
 
+   Optimiser la récupération
+   Implémenter l'application de filtres côté backend
+   Faire un nzpopover sur le delete button En cours
 
-
-
+   Faire un reload dynamique des lignes, en afficher x et reload de y quand le scroll se raproche de z de x + lambda*y

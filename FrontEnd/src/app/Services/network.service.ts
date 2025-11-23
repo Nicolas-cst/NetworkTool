@@ -14,12 +14,12 @@ export class NetworkService {
     private http: HttpClient
   ) { }
 
-  public selectedInterface = new BehaviorSubject<number>(0);
+  public selectedInterface = new BehaviorSubject<number>(-1);
   selectedInterface$ = this.selectedInterface.asObservable();
   
   public filter: Filter = new Filter();
 
-  // TODO : trouver une liste exhaustive des protocoles
+
   allProtocols : Protocol[] = [{"id":1, "name":"Ethernet"},
   {"id":2, "name":"IPv4"},
   {"id":3, "name":"IPv6"},
@@ -121,11 +121,21 @@ export class NetworkService {
   {"id":99, "name":"SCTP"},
   {"id":100, "name":"RTP Event"}];
 
-
-
   // REQUETES HTTP
-  getAvailableInterfaces(): Observable<string[]> {
+  getAvailableInterfaces(){
     return this.http.get<string[]>('http://127.0.0.1:8000/network/interfaces');
+  }
+
+  startCapture(){
+    return this.http.get<any>(`http://127.0.0.1:8000/network/start/${this.selectedInterface.getValue()}`); 
+  }
+
+  stopCapture(){
+    return this.http.get<any>('http://127.0.0.1:8000/network/stop'); 
+  }
+
+  getPackets(){
+    return this.http.get<any>('http://127.0.0.1:8000/network/packets');
   }
 
 } 

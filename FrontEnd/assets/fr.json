@@ -1,4 +1,9 @@
 {
+  "GENERAL": {
+    "CONFIRM-DELETE": "Are you sure you want to delete the captured data ?",
+    "CONFIRM" : "Confirm",
+    "CANCEL" : "Cancel"
+  },
   "MENU": {
     "INTERFACES": "Interfaces",
     "SETTINGS": "Settings",

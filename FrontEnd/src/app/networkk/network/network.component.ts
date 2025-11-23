@@ -7,10 +7,11 @@ import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { TranslatePipe } from '../../shared/pipes/translate.pipe';
 import { NetworkFilterComponent } from "../network-filter/network-filter.component";
+import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
 
 @Component({
   selector: 'app-network',
-  imports: [NzSpaceModule, NzButtonModule, NzTableModule, NzIconModule, TranslatePipe, NetworkFilterComponent],
+  imports: [NzSpaceModule, NzButtonModule, NzTableModule, NzIconModule, TranslatePipe, NetworkFilterComponent, NzPopconfirmModule],
   templateUrl: './network.component.html',
   styleUrl: './network.component.scss'
 })
@@ -21,39 +22,41 @@ export class NetworkComponent {
     public ns: NetworkService
   ){}
 
-  packets : Packet[] =[];
-  ws: WebSocket | null = null;
+  filteredData : Packet[] =[];
   setFilter: boolean = false;
+  intervalId: any;
+  isCapturing: boolean = false;
+
 
   startCapture(){
-    if(!this.ws){
-
-      this.ws = new WebSocket('ws://127.0.0.1:8000/network/start');
-
-      this.ws.onopen = () => {
-        console.log('WebSocket connection opened');
-      };
-
-      this.ws.onmessage = (event) => {
-        console.log('Received data:', event.data);
-      };
-
-      this.ws.onclose = () => {
-        console.log('WebSocket connection closed');
-      };
-    }
+    this.ns.startCapture().subscribe({
+      next: () => {
+        this.isCapturing = true;
+      }
+    });
+    this.intervalId = setInterval(() => {
+      this.ns.getPackets().subscribe(data => {
+        this.filteredData.push(...data);
+        console.log(this.filteredData);
+      });
+    }, 1000);
   }
 
   stopCapture(){
-    if(this.ws){
-      this.ws.close();
-      this.ws = null;
-    }
+    clearInterval(this.intervalId);
+    this.ns.stopCapture().subscribe({
+      next: () => {
+        this.isCapturing = false;
+      }
+    });
+  }
+
+  resetData(){
+    this.filteredData = [];
   }
   
   showFilter(){
     this.setFilter =  !this.setFilter;
-    console.log(this.setFilter)
   }
   
 }

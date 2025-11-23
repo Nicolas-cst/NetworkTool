@@ -51,7 +51,7 @@ export class NetworkFilterComponent implements OnInit {
   // LENGTH RANGE
   minLength: number = 0;
   maxLength: number = 100000;
-  isLengthRangeValid: boolean = false;
+  isLengthRangeValid: boolean = true;
 
   ngOnInit() {
     this.newFilter = this.ns.filter; // On ajoute l'ancien filtre au filtre courant et on fera les modifs dessus.
@@ -194,11 +194,17 @@ export class NetworkFilterComponent implements OnInit {
   }
 
   onLengthChange() {
-    if (this.newFilter.lengthRanges.findIndex(range => range.min === this.minLength && range.max === this.maxLength) != -1) {
-      this.isLengthRangeValid = false;
-    } else {
-      this.isLengthRangeValid = this.minLength >= 0 && this.maxLength >= 0 && this.maxLength <= 100000 && this.minLength < this.maxLength;
-    }
+    const rangeAlreadyExists = this.newFilter.lengthRanges.some(
+      range => range.min === this.minLength && range.max === this.maxLength
+    );
+
+    const hasValidBounds = 
+      this.minLength >= 0 && 
+      this.maxLength >= 0 && 
+      this.maxLength <= 100000 && 
+      this.minLength < this.maxLength;
+
+    this.isLengthRangeValid = !rangeAlreadyExists && hasValidBounds;
   }
 
   removeLengthRange(lengthRange: LengthRange) {
