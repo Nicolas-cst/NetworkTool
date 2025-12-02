@@ -6,9 +6,15 @@
     <nz-icon nzType="search" nzTheme="outline"/> 
   </button>
   <button nz-button nzType="primary" [disabled]="filteredData.length === 0 || isCapturing"
+      nz-tooltip nzTooltipTitle="{{'NETWORK.HEADER.DELETE-CAPTURE' | translate}}"
       nz-popconfirm nzPopconfirmTitle="{{'GENERAL.CONFIRM-DELETE' | translate }}" (nzOnConfirm)="resetData()" 
       nzOkText="{{'GENERAL.CONFIRM' | translate}}" nzCancelText="{{'GENERAL.CANCEL' | translate}}">
     <nz-icon nzType="delete" nzTheme="outline"/>
+  </button>
+  <!-- #TODO : faire un style dynamique lorsque la cpature a été sauvegardée avec un message qui se lance -->
+  <button nz-button nzType="primary" [disabled]="filteredData.length === 0 || isCapturing" 
+    nz-tooltip nzTooltipTitle="{{'NETWORK.HEADER.SAVE-CAPTURE' | translate}}" (click)="saveData()">
+    <nz-icon nzType="download" nzTheme="outline"/>
   </button>
 </nz-space-compact>
 

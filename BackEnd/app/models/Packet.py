@@ -1,11 +1,11 @@
 from dataclasses import dataclass
-from typing import Optional
+from pydantic import BaseModel
+from models.Protocol import Protocol
 
-@dataclass
-class Packet:
-    id: Optional[int] = None
-    timestamp: Optional[str] = None
-    src_ip: Optional[str] = None
-    dest_ip: Optional[str] = None
-    protocol: Optional[str] = None
-    length: Optional[int] = None
+class Packet(BaseModel):
+    id: int
+    timestamp: str
+    src_ip: str
+    dest_ip: str
+    protocol: Protocol
+    length: int

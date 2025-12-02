@@ -1,0 +1,34 @@
+FAIT : 
+
+   * Afficher en temps réel les paquets et connexions circulant sur le réseau.
+   * Fournir des informations détaillées sur chaque paquet : adresse IP source/destination, protocole, port, taille, timestamp.
+
+A FAIRE : 
+
+   NETWORK GENERAL : 
+   * Autoriser la capture des paquets sur une durée définie ou jusqu’à un certain nombre de paquets.
+   * Permettre le filtrage du trafic par protocole (TCP, UDP, HTTP, HTTPS, etc.).
+   * Faire un reload dynamique des lignes, en afficher x et reload de y quand le scroll se raproche de z de x + lambda*y
+
+   STOCKAGE DE CAPTURES : 
+   * Permettre l’enregistrement des données capturées pour analyse ultérieure (format PCAP ou JSON).
+   * Fournir des options d’export des données filtrées pour utilisation dans d’autres outil(json ...)
+   
+   SECURITE : 
+   * Créer un fichier de logs dans le back-end
+
+   DATA BASE : 
+   * Comprendre comment mettre en base proprement, créer des tables et récupérer les infos surtout. 
+   * Mettre en place la base de données
+
+
+
+
+
+
+Filtrage : 
+   Tri du moins probable au plus probable (objectif, éliminer le plus dès les premières opérations de tri) : 
+      Protocol : déjà on dégage tous les paquets dont le protocole est différent de la liste
+      Length : on garde seulement ceux dont la taille fait parti d'une length IpRange
+      IP : on garde suelement ceux dont l'ip est incluse dans le range ou 
+

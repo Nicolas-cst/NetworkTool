@@ -2,14 +2,20 @@
   "GENERAL": {
     "CONFIRM-DELETE": "Are you sure you want to delete the captured data ?",
     "CONFIRM" : "Confirm",
-    "CANCEL" : "Cancel"
+    "CANCEL" : "Cancel",
+    "SAVE" : "Save"
   },
   "MENU": {
     "INTERFACES": "Interfaces",
+    "SAVED-CAPTURES": "Saved captures",
     "SETTINGS": "Settings",
     "LOGO" : "Network Tool"
   },
   "NETWORK": {
+    "HEADER": {
+      "SAVE-CAPTURE": "Save the current capture",
+      "DELETE-CAPTURE": "Delete the current capture"
+    },
     "TABLE": {
       "ID": "Id",
       "TIMESTAMP": "Timestamp",

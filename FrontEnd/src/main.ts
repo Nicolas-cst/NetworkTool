@@ -1,7 +1,7 @@
 import { bootstrapApplication } from '@angular/platform-browser';
 import { appConfig } from './app/app.config';
 import { AppComponent } from './app/app.component';
-import fr from './../assets/fr.json'
+import en from  '../assets/en.json'
 
 
 
@@ -23,4 +23,4 @@ function renderTexts(obj: any) {
   });
 }
 
-renderTexts(fr);
+renderTexts(en);

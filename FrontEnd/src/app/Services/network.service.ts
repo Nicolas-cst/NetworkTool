@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Filter } from '../entities/filter';
 import { Protocol } from '../entities/protocol';
+import { Capture } from '../entities/capture';
 
 
 @Injectable({
@@ -17,8 +18,8 @@ export class NetworkService {
   public selectedInterface = new BehaviorSubject<number>(-1);
   selectedInterface$ = this.selectedInterface.asObservable();
   
+  savedCaptures: Capture[]=[]
   public filter: Filter = new Filter();
-
 
   allProtocols : Protocol[] = [{"id":1, "name":"Ethernet"},
   {"id":2, "name":"IPv4"},
@@ -127,7 +128,7 @@ export class NetworkService {
   }
 
   startCapture(){
-    return this.http.get<any>(`http://127.0.0.1:8000/network/start/${this.selectedInterface.getValue()}`); 
+    return this.http.post<any>(`http://127.0.0.1:8000/network/start/${this.selectedInterface.getValue()}`, this.filter); 
   }
 
   stopCapture(){
@@ -136,6 +137,10 @@ export class NetworkService {
 
   getPackets(){
     return this.http.get<any>('http://127.0.0.1:8000/network/packets');
+  }
+
+  saveCapture(capture: Capture){
+    return this.http.post<number>('http://127.0.0.1:8000/network/save-capture', capture);
   }
 
 } 

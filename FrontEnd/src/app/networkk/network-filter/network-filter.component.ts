@@ -179,7 +179,6 @@ export class NetworkFilterComponent implements OnInit {
   ipToNumber(ip: string) {
     const parts = ip.split('.').map(Number);
     const result = (parts[0] << 24) + (parts[1] << 16) + (parts[2] << 8) + parts[3];
-    console.log(result);
     return result;
   }
 

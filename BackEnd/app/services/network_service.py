@@ -3,24 +3,25 @@ import psutil
 from scapy.all import sniff, IP, IPv6, TCP, UDP
 import threading
 from datetime import datetime
-import logging
-
-logger = logging.getLogger("uvicorn")
+from sqlalchemy.orm import Session
+from models import Capture, Filter, Packet, IpRange, LengthRange, Protocol
+from database.tables import Captures, Filters, IpRanges, Ips, LengthRanges, Packets, ProtocolFilterLink, Protocols
 
 class NetworkService:
+
     def __init__(self):
         self.packets = []
         self.capturing = False
         self.interface = None
         self.capture_thread = None
         self.packet_id_counter = 0
-        logger.info("✅ NetworkService initialized")
 
     def all_network_interfaces(self):
         return list(psutil.net_if_addrs().keys())
     
-    def start_capture(self, interface_index: int):
-        logger.info(f"🚀 start_capture called with interface_index={interface_index}")
+    def start_capture(self, interface_index: int, filter):
+        logger.info(f"🚀 start_capture called with interface_index={interface_index} and filter={filter}")
+        
         if self.capturing:
             return {"status": "Capture already running"}
 
@@ -31,10 +32,10 @@ class NetworkService:
         
         self.interface = interfaces[interface_index]
         self.capturing = True
-        self.packets = []
         self.packet_id_counter = 0
+        self.startDatetime = datetime.now()
+        self.filter = filter
 
-        # Lancement du thread
         self.capture_thread = threading.Thread(
             target=self._sniff_loop,
             daemon=True
@@ -46,10 +47,14 @@ class NetworkService:
     def stop_capture(self):
         logger.info("🛑 stop_capture called")
         self.capturing = False
+        self.packets = []
         return {"status": "Capture stopped"}
     
     def getPackets(self):
-        return self.packets 
+        # On retourne seulement les paquets capturés
+        new_packets = self.packets
+        self.packets = []
+        return new_packets
     
     def _sniff_loop(self):
         logger.info(f"🔍 Starting sniff on interface {self.interface}")
@@ -57,23 +62,27 @@ class NetworkService:
         while self.capturing:
             sniff(
                 iface=self.interface,
-                prn=self._process_packet,
+                prn=self._clean_packets,
                 store=False,
                 timeout=1
             )
 
-    def _process_packet(self, pkt):
+    def _clean_packets(self, pkt):
         """Convertit un paquet Scapy en dictionnaire sérialisable"""
         try:
             self.packet_id_counter += 1
+            delta = datetime.now() - self.startDatetime
+            timestamp = round(delta.total_seconds() * 1000, 3)
+
             packet_dict = {
                 "id": self.packet_id_counter,
-                "timestamp": datetime.now().isoformat(),
+                "timestamp": timestamp,
                 "src_ip": None,
                 "dest_ip": None,
-                "protocol": pkt.name if hasattr(pkt, 'name') else "Unknown",
+                "protocol":"",
                 "length": len(pkt)
             }
+            
             
             # Extraire les IPs si disponibles
             if IP in pkt:
@@ -92,5 +101,77 @@ class NetworkService:
                     packet_dict["protocol"] = "UDP"
             
             self.packets.append(packet_dict)
+
+
+
         except Exception as e:
             logger.error(f"❌ Error processing packet: {e}")
+    
+    def save_capture(db: Session, capture: Capture):
+        
+        new_filter = Filter()
+        db.add(new_filter)
+        db.commit()
+        db.refresh(new_filter)
+
+        
+        new_capture = Captures(
+            FilterId=new_filter.FilterId,  
+            StartDate=capture.start_date,
+            EndDate=capture.end_date,
+            Interface=capture.interfaceId
+        )
+        db.add(new_capture)
+        db.commit()
+        db.refresh(new_capture)
+
+        for lr in capture.filter.lengthRanges:
+            new_lr = LengthRanges(
+                FilterId=new_filter.FilterId,
+                MinLength=lr.min,
+                MaxLength=lr.max
+            )
+            db.add(new_lr)
+        db.commit()
+
+        for ir in capture.filter.sourceIpRanges:
+            new_ir = IpRanges(
+                FilterId=new_filter.FilterId,
+                Type=0,
+                StartIp=ir.start,
+                EndIp=ir.end
+            )
+            db.add(new_ir)
+  
+        for ir in capture.filter.destinationIpRanges:
+            new_ir = IpRanges(
+                FilterId=new_filter.FilterId,
+                Type=1,
+                StartIp=ir.start,
+                EndIp=ir.end
+            )
+            db.add(new_ir)
+        db.commit()
+
+        for ip in capture.filter.sourceIps:
+            new_ip = Ips(FilterId=new_filter.FilterId, Ip=ip, Type=0)
+            db.add(new_ip)
+
+        for ip in capture.filter.destinationIps:
+            new_ip = Ips(FilterId=new_filter.FilterId, Ip=ip, Type=1)
+            db.add(new_ip)
+        db.commit()
+
+        for packet in capture.data:
+            new_packet = Packets(
+                CaptureId=new_capture.CaptureId,
+                ProtocolId=packet.protocol.ProtocolId,
+                Timestamp=packet.timestamp,
+                SourceIp=packet.src_ip,
+                DestIp=packet.dest_ip,
+                Length=packet.length
+            )
+            db.add(new_packet)
+        db.commit()
+
+        return new_capture.CaptureId

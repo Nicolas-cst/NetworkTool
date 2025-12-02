@@ -7,7 +7,7 @@
 
   <ul nz-menu nzTheme="dark" nzMode="inline" [nzInlineCollapsed]="isCollapsed" class="sidebar-menu">
 
-    <li nz-submenu nzOpen nzTitle="Interfaces" nzIcon="wifi">
+    <li nz-submenu nzOpen nzTitle="{{'MENU.INTERFACES' | translate}}" nzIcon="wifi">
       <ul>
         @for (iface of disponibleIF; track iface) {
           <li nz-menu-item (click)="selectIF(iface)">
@@ -15,6 +15,11 @@
           </li>
         }
       </ul>
+    </li>
+
+    <li nz-menu-item (click)="showSavedCaptures()">
+      <i nz-icon nzType="save"></i> 
+      @if(!isCollapsed){<span>{{'MENU.SAVED-CAPTURES' | translate}}</span>}
     </li>
 
     <div class="sidebar-spacer"></div>
