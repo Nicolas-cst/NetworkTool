@@ -6,8 +6,8 @@ class Packets(Base):
     __tablename__ = "packets"
 
     PacketId = Column(Integer, primary_key=True, index=True)
-    CaptureId = Column(Integer, ForeignKey("Captures.id"), index=True)
-    ProtocolId = Column(Integer, ForeignKey("Protocols.id"), index=True)
+    CaptureId = Column(Integer, ForeignKey("captures.CaptureId"), index=True)
+    ProtocolId = Column(Integer, ForeignKey("protocols.ProtocolId"), index=True)
     Timestamp = Column(Date, index=True)
     SourceIp = Column(String, index=True)
     DestIp = Column(String, index=True)

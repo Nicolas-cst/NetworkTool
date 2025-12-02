@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Date, Integer, ForeignKey
 from sqlalchemy.orm import relationship
-from database.database import Base
+from database import Base
 
 class Captures(Base):
     __tablename__ = "captures"

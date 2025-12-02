@@ -6,9 +6,9 @@ class IpRanges(Base):
     __tablename__ = "ipRanges"
 
     RangeId = Column(Integer, primary_key=True, index=True)
-    FilterId = Column(Integer, ForeignKey("Filters.id"), index=True)
+    FilterId = Column(Integer, ForeignKey("filters.FilterId"), index=True)
     Type = Column(Integer, index=True)
     StartIp = Column(String, index=True)
     EndtIp = Column(String, index=True)
 
-    filter = relationship("Filter", back_populates="ipRanges")
+    filter = relationship("filters", back_populates="ipRanges")

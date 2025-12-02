@@ -9,5 +9,5 @@ class Ips(Base):
     Ip = Column(String, primary_key=True, index=True)
     Type = Column(Integer, index=True)
 
-    filter = relationship("Filters", back_populates="ips")
+    filter = relationship("filters", back_populates="ips")
     

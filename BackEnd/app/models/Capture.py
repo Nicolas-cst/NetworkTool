@@ -6,7 +6,7 @@ from models.Packet import Packet
 
 class Capture(BaseModel):
     id: int
-    filter: List[Filter]
+    filter: Filter
     start_date: date
     end_date: date
     data: List[Packet]

@@ -4,6 +4,7 @@ from scapy.all import sniff, IP, IPv6, TCP, UDP
 import threading
 from datetime import datetime
 from sqlalchemy.orm import Session
+from models.SaveCaptureAnswer import SaveCaptureAnswer
 from models import Capture, Filter, Packet, IpRange, LengthRange, Protocol
 from database.tables import Captures, Filters, IpRanges, Ips, LengthRanges, Packets, ProtocolFilterLink, Protocols
 
@@ -107,7 +108,7 @@ class NetworkService:
         except Exception as e:
             logger.error(f"❌ Error processing packet: {e}")
     
-    def save_capture(db: Session, capture: Capture):
+    def save_capture(db: Session, capture: Capture) -> SaveCaptureAnswer:
         
         new_filter = Filter()
         db.add(new_filter)
@@ -174,4 +175,5 @@ class NetworkService:
             db.add(new_packet)
         db.commit()
 
-        return new_capture.CaptureId
+        result = SaveCaptureAnswer(capture_id=new_capture.CaptureId)
+        return result

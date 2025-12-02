@@ -5,6 +5,6 @@ from database import Base
 class ProtocolFilterLink(Base):
     __tablename__ = "protocolFilterLink"
     Base.metadata
-    ProtocolId = Column(Integer, ForeignKey("Protocols.id"), primary_key=True, index=True)
-    FilterId = Column(Integer, ForeignKey("Filters.id"), primary_key=True, index=True)
+    ProtocolId = Column(Integer, ForeignKey("protocols.ProtocolId"), primary_key=True, index=True)
+    FilterId = Column(Integer, ForeignKey("filters.FilterId"), primary_key=True, index=True)
     

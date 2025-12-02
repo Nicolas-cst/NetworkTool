@@ -1,9 +1,10 @@
 import json
 from fastapi import APIRouter
-from models import Capture
+from models.Capture import Capture
 from services import network_service
 import logging
 from models.Filter import Filter
+from models.SaveCaptureAnswer import SaveCaptureAnswer
 
 logger = logging.getLogger("uvicorn")
 router = APIRouter()
@@ -31,8 +32,7 @@ def getPackets():
 def get_network_interfaces():
     return ns.all_network_interfaces()
 
-
-@router.post("/network/save-capture")
-def save_capture(capture: Capture) -> int :
-    captureId = ns.save_capture(capture)
-    return {"id": captureId}
+@router.post("/network/save-capture", response_model=SaveCaptureAnswer)
+def save_capture(capture: Capture) -> SaveCaptureAnswer:
+    capture_id_answer: SaveCaptureAnswer = ns.save_capture(capture)
+    return capture_id_answer
